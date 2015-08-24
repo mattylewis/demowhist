@@ -5,12 +5,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import mglewis.co.uk.demowhist.cards.Game;
+
 public class MainActivity extends AppCompatActivity {
+    private static final String LOG_TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Game game = new Game();
+        game.playRounds();
+
     }
 
     @Override
