@@ -7,24 +7,24 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by MK on 24/08/2015.
+ * Created by Matthew Lewis on 16/09/2015.
  */
-public class Round {
-    private static final String LOG_TAG = "Round";
+public class SimulatedRound extends Round {
+    private static final String LOG_TAG = "SimulatedRound";
 
     private List<Player> playerList;
-    private List<Trick> playedTricks = new LinkedList<>();
+    private List<Play> winningPlays = new LinkedList<>();
     private Deck deck = new Deck();
     private Card.Suit trumpSuit;
     private int numberOfTricksToPlay;
 
-    public Round(List<Player> playerList, Card.Suit trumpSuit, int roundNumber) {
+    public SimulatedRound(List<Player> playerList, Card.Suit trumpSuit, int roundNumber) {
+        super(playerList, trumpSuit, roundNumber);
         Log.i(LOG_TAG, "Starting Round #" + roundNumber);
         this.playerList = playerList;
         this.trumpSuit = trumpSuit;
         numberOfTricksToPlay = calculateNumberOfTricksToPlay(roundNumber);
         Log.i(LOG_TAG, "Round #" + roundNumber + " will consist of " + numberOfTricksToPlay + " tricks");
-        dealHands();
     }
 
     public int calculateNumberOfTricksToPlay(int roundNumber) {
@@ -41,20 +41,21 @@ public class Round {
     public void playTricks() {
         for (int i = 0; i < numberOfTricksToPlay; i++) {
             Log.i(LOG_TAG, "Playing Trick #" + i);
-            Trick trick = playTrick();
-            Play winningPlay = trick.getWinningPlay();
+            Play winningPlay = playTrick();
             Log.i(LOG_TAG, winningPlay.getPlayer() + " won the trick with the " + winningPlay.getCard());
+            winningPlays.add(winningPlay);
             rotateToWinner(winningPlay.getPlayer());
+
         }
     }
 
-    private Trick playTrick() {
+    private Play playTrick() {
         Trick trick = new Trick(this, trumpSuit);
         Log.i(LOG_TAG, "The trump suit is: " + trumpSuit);
-        for (Player player : playerList) { 
+        for (Player player : playerList) {
             trick.makePlay(new Play(player, player.playCard(trick)));
         }
-        return trick;
+        return trick.getWinningPlay();
     }
 
     private void rotateToWinner(Player winner) {

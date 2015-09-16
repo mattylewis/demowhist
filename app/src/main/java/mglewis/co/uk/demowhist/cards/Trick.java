@@ -1,5 +1,7 @@
 package mglewis.co.uk.demowhist.cards;
 
+import android.util.Log;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,12 +15,15 @@ public class Trick {
 
     private List<Play> plays = new LinkedList<>();
     private Suit trump;
+    private Round round;
 
-    public Trick(Suit trump) {
+    public Trick(Round round, Suit trump) {
+        this.round = round;
         this.trump = trump;
     }
 
     public void makePlay(Play play) {
+        Log.i(LOG_TAG, play.getPlayer() + " played the " + play.getCard());
         plays.add(play);
     }
 

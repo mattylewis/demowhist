@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
         Game game = new Game();
         game.playRounds();
-        game.
 
     }
 
