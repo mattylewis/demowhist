@@ -27,7 +27,7 @@ public class Round {
         dealHands();
     }
 
-    private int calculateNumberOfTricksToPlay(int roundNumber) {
+    public int calculateNumberOfTricksToPlay(int roundNumber) {
         return 13 - roundNumber;
     }
 
@@ -44,18 +44,24 @@ public class Round {
             Play winningPlay = playTrick();
             Log.i(LOG_TAG, winningPlay.getPlayer() + " won the trick with the " + winningPlay.getCard());
             winningPlays.add(winningPlay);
-            // TODO: rotation needs to be fixed
-            Collections.rotate(playerList, playerList.indexOf(winningPlay.getPlayer()));
+            rotateToWinner(winningPlay.getPlayer());
+
         }
     }
 
     private Play playTrick() {
         Trick trick = new Trick(trumpSuit);
-        for (Player player : playerList) {
+        Log.i(LOG_TAG, "The trump suit is: " + trumpSuit);
+        for (Player player : playerList) { 
             Card card = player.playCard(trick);
             Log.i(LOG_TAG, player + " played the " + card);
             trick.makePlay(new Play(player, card));
         }
         return trick.getWinningPlay();
+    }
+
+    private void rotateToWinner(Player winner) {
+        Collections.rotate(playerList, playerList.size() - playerList.indexOf(winner));
+        Log.i(LOG_TAG, "Next player is: " + playerList.get(0));
     }
 }
