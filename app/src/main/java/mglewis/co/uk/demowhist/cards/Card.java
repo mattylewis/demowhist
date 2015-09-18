@@ -44,6 +44,24 @@ public class Card implements Comparable<Card> {
         return -1;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Card)) {
+            return false;
+        } else if (object == this) {
+            return true;
+        } else if (object.hashCode() == this.hashCode()) {
+            return true;
+        }
+        return false;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return 1 + ((getSuitOrdinal() * 193) + (getValueOrdinal() * 3907));
+    }
+
     public enum Suit {
         CLUBS, DIAMONDS, SPADES, HEARTS
     }

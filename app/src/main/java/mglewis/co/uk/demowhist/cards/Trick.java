@@ -15,10 +15,8 @@ public class Trick {
 
     private List<Play> plays = new LinkedList<>();
     private Suit trump;
-    private Round round;
 
-    public Trick(Round round, Suit trump) {
-        this.round = round;
+    public Trick(Suit trump) {
         this.trump = trump;
     }
 

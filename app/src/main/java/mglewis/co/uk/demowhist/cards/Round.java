@@ -13,8 +13,8 @@ public class Round {
     private static final String LOG_TAG = "Round";
 
     private List<Player> playerList;
-    private List<Trick> playedTricks = new LinkedList<>();
     private Deck deck = new Deck();
+    private PlayedTricks playedTricks = new PlayedTricks();
     private Card.Suit trumpSuit;
     private int numberOfTricksToPlay;
 
@@ -25,6 +25,11 @@ public class Round {
         numberOfTricksToPlay = calculateNumberOfTricksToPlay(roundNumber);
         Log.i(LOG_TAG, "Round #" + roundNumber + " will consist of " + numberOfTricksToPlay + " tricks");
         dealHands();
+    }
+
+    // private constructor for use creating a round state for simulation
+    private Round() {
+        // TODO: implement the creation of a round using existing data
     }
 
     public int calculateNumberOfTricksToPlay(int roundNumber) {
@@ -49,10 +54,10 @@ public class Round {
     }
 
     private Trick playTrick() {
-        Trick trick = new Trick(this, trumpSuit);
+        Trick trick = new Trick(trumpSuit);
         Log.i(LOG_TAG, "The trump suit is: " + trumpSuit);
         for (Player player : playerList) { 
-            trick.makePlay(new Play(player, player.playCard(trick)));
+            trick.makePlay(player.playCard(this, trick));
         }
         return trick;
     }
@@ -60,5 +65,16 @@ public class Round {
     private void rotateToWinner(Player winner) {
         Collections.rotate(playerList, playerList.size() - playerList.indexOf(winner));
         Log.i(LOG_TAG, "Next player is: " + playerList.get(0));
+    }
+
+    public void createStateForSimulation() {
+        // loop through each player and create a deep copy
+//        for (Player player : playerList) {
+//            player.createPlayerStateForSimulation();
+//        }
+
+        // loop through the list of played tricks
+
+
     }
 }

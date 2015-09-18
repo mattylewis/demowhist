@@ -21,14 +21,26 @@ public class Player {
         currentHand = hand;
     }
 
-    public Card playCard(Trick trick) {
+    public Play playCard(Round round, Trick trick) {
         List<Card> validCards = currentHand.getValidCards(trick);
-        Card card = calculateBestCard(trick, validCards);
+        Card card = calculateBestCardToPlay(round, trick, validCards);
         currentHand.removeCard(card);
-        return card;
+        return new Play(this, card);
     }
 
-    private Card calculateBestCard(Trick trick, List<Card> validCards) {
+    private Card calculateBestCardToPlay(Round round, Trick trick, List<Card> validCards) {
+        // run through the rest of the round using each of the players valid cards in turn to see what is the most successfully option
+        for (Card card : validCards) {
+            // load a copy of the round
+            // - replacing human players with computer players
+            // - swapping their 'actual' cards with a random selection of cards that haven't yet been played
+
+
+            // play the rest of the round
+
+            // calculate how many points were won and if this is the best strategy so far
+        }
+
         return validCards.get(0);
     }
 
@@ -46,4 +58,9 @@ public class Player {
     public String toString() {
         return playerName;
     }
+
+//    public Player createPlayerStateForSimulation() {
+//
+//    }
+
 }
