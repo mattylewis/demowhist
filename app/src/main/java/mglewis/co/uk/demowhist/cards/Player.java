@@ -17,6 +17,11 @@ public class Player {
         this.playerName = playerName;
     }
 
+    // this constructor is use to create a deep copy of a player object for simulation purposes
+    private Player(Player player) {
+        this.playerName = player.toString();
+    }
+
     public void setHand(Hand hand) {
         currentHand = hand;
     }
@@ -31,6 +36,7 @@ public class Player {
     private Card calculateBestCardToPlay(Round round, Trick trick, List<Card> validCards) {
         // run through the rest of the round using each of the players valid cards in turn to see what is the most successfully option
         for (Card card : validCards) {
+            round.createStateForSimulation();
             // load a copy of the round
             // - replacing human players with computer players
             // - swapping their 'actual' cards with a random selection of cards that haven't yet been played
@@ -59,8 +65,8 @@ public class Player {
         return playerName;
     }
 
-//    public Player createPlayerStateForSimulation() {
-//
-//    }
+    public Player createPlayerStateForSimulation(Hand hand) {
+        return new Player(this);
+    }
 
 }

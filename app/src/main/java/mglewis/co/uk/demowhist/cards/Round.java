@@ -28,8 +28,11 @@ public class Round {
     }
 
     // private constructor for use creating a round state for simulation
-    private Round() {
-        // TODO: implement the creation of a round using existing data
+    private Round(List<Player> playerList, Card.Suit trumpSuit, PlayedTricks playedTricks, int numberOfTricksToPlay) {
+        this.playerList = playerList;
+        this.trumpSuit = trumpSuit;
+        this.playedTricks = playedTricks;
+        this.numberOfTricksToPlay = numberOfTricksToPlay;
     }
 
     public int calculateNumberOfTricksToPlay(int roundNumber) {
@@ -47,6 +50,7 @@ public class Round {
         for (int i = 0; i < numberOfTricksToPlay; i++) {
             Log.i(LOG_TAG, "Playing Trick #" + i);
             Trick trick = playTrick();
+            playedTricks.add(trick);
             Play winningPlay = trick.getWinningPlay();
             Log.i(LOG_TAG, winningPlay.getPlayer() + " won the trick with the " + winningPlay.getCard());
             rotateToWinner(winningPlay.getPlayer());
@@ -67,14 +71,26 @@ public class Round {
         Log.i(LOG_TAG, "Next player is: " + playerList.get(0));
     }
 
+    private List<Player> createSimPlayerList(List<Player> players) {
+        List<Player> simPlayers = new LinkedList<>();
+        for (Player player : playerList) {
+            simPlayers.add(player.createPlayerStateForSimulation(hand));
+        }
+        return simPlayers;
+    }
+
+    private void setSimPlayerHands(List<Player> simPlayers) {
+        Deck unplayedCards = new Deck(playedTricks.getPlayedCards());
+        int remainingCardsInPlayersHands = numberOfTricksToPlay - playedTricks.size();
+        for (Player simPlayer : simPlayers) {
+            Hand hand = unplayedCards.deal(remainingCardsInPlayersHands);
+            simPlayer.setHand(hand);
+        }
+    }
+
     public void createStateForSimulation() {
-        // loop through each player and create a deep copy
-//        for (Player player : playerList) {
-//            player.createPlayerStateForSimulation();
-//        }
-
-        // loop through the list of played tricks
-
-
+        List<Player> simPlayers = createSimPlayerList(playerList);
+        setSimPlayerHands(simPlayers);
+        Round simRound = new Round(simPlayers, trumpSuit, playedTricks, numberOfTricksToPlay);
     }
 }

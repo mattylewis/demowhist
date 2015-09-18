@@ -24,4 +24,7 @@ public class PlayedTricks {
         return playedCards;
     }
 
+    public int size() {
+        return playedTricks.size();
+    }
 }
