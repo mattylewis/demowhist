@@ -12,26 +12,25 @@ import java.util.List;
 public class Round {
     private static final String LOG_TAG = "Round";
 
-    private List<Player> playerList;
+    private List<Player> players;
     private Deck deck = new Deck();
     private PlayedTricks playedTricks = new PlayedTricks();
     private Card.Suit trumpSuit;
     private int numberOfTricksToPlay;
 
-    public Round(List<Player> playerList, Card.Suit trumpSuit, int roundNumber) {
+    public Round(List<Player> players, Card.Suit trumpSuit, int roundNumber) {
         Log.i(LOG_TAG, "Starting Round #" + roundNumber);
-        this.playerList = playerList;
+        this.players = players;
         this.trumpSuit = trumpSuit;
         numberOfTricksToPlay = calculateNumberOfTricksToPlay(roundNumber);
         Log.i(LOG_TAG, "Round #" + roundNumber + " will consist of " + numberOfTricksToPlay + " tricks");
-        dealHands();
     }
 
-    // private constructor for use creating a round state for simulation
-    private Round(List<Player> playerList, Card.Suit trumpSuit, PlayedTricks playedTricks, int numberOfTricksToPlay) {
-        this.playerList = playerList;
+    // private constructor for use creating a copy of an existing round state for ai simulation
+    private Round(List<Player> players, Card.Suit trumpSuit, PlayedTricks playedTricks, int numberOfTricksToPlay) {
+        this.players = players;
         this.trumpSuit = trumpSuit;
-        this.playedTricks = playedTricks;
+        this.playedTricks = playedTricks.copyForSimulation();
         this.numberOfTricksToPlay = numberOfTricksToPlay;
     }
 
@@ -39,8 +38,8 @@ public class Round {
         return 13 - roundNumber;
     }
 
-    private void dealHands() {
-        for (Player player : playerList) {
+    public void dealHands() {
+        for (Player player : players) {
             player.setHand(deck.deal(numberOfTricksToPlay));
             player.printHand();
         }
@@ -48,33 +47,48 @@ public class Round {
 
     public void playTricks() {
         for (int i = 0; i < numberOfTricksToPlay; i++) {
-            Log.i(LOG_TAG, "Playing Trick #" + i);
             Trick trick = playTrick();
             playedTricks.add(trick);
             Play winningPlay = trick.getWinningPlay();
-            Log.i(LOG_TAG, winningPlay.getPlayer() + " won the trick with the " + winningPlay.getCard());
+            // Log.i(LOG_TAG, winningPlay.getPlayer() + " won the trick with the " + winningPlay.getCard());
             rotateToWinner(winningPlay.getPlayer());
         }
     }
 
+    public void resumeTricks(Trick trick, Card nextCardToPlay) {
+        trick = resumeTrick(trick, nextCardToPlay);
+        playedTricks.add(trick);
+        rotateToWinner(trick.getWinningPlayer());
+        numberOfTricksToPlay = numberOfTricksToPlay - 1;
+        playTricks();
+    }
+
     private Trick playTrick() {
         Trick trick = new Trick(trumpSuit);
-        Log.i(LOG_TAG, "The trump suit is: " + trumpSuit);
-        for (Player player : playerList) { 
+//        Log.i(LOG_TAG, "The trump suit is: " + trumpSuit);
+        for (Player player : players) {
+            trick.makePlay(player.playCard(this, trick));
+        }
+        return trick;
+    }
+
+    private Trick resumeTrick(Trick trick, Card nextCardToPlay) {
+        List<Player> outstandingPlayers = trick.getOutstandingPlayers(players);
+        for (Player player : outstandingPlayers) {
             trick.makePlay(player.playCard(this, trick));
         }
         return trick;
     }
 
     private void rotateToWinner(Player winner) {
-        Collections.rotate(playerList, playerList.size() - playerList.indexOf(winner));
-        Log.i(LOG_TAG, "Next player is: " + playerList.get(0));
+        Collections.rotate(players, players.size() - players.indexOf(winner));
+        Log.i(LOG_TAG, "Next player is: " + players.get(0));
     }
 
     private List<Player> createSimPlayerList(List<Player> players) {
         List<Player> simPlayers = new LinkedList<>();
-        for (Player player : playerList) {
-            simPlayers.add(player.createPlayerStateForSimulation(hand));
+        for (Player player : this.players) {
+            simPlayers.add(player.copyForSimulation());
         }
         return simPlayers;
     }
@@ -88,9 +102,9 @@ public class Round {
         }
     }
 
-    public void createStateForSimulation() {
-        List<Player> simPlayers = createSimPlayerList(playerList);
+    public Round copyForSimulation() {
+        List<Player> simPlayers = createSimPlayerList(players);
         setSimPlayerHands(simPlayers);
-        Round simRound = new Round(simPlayers, trumpSuit, playedTricks, numberOfTricksToPlay);
+        return new Round(simPlayers, trumpSuit, playedTricks, numberOfTricksToPlay);
     }
 }

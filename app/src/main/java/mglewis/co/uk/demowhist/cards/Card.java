@@ -54,7 +54,6 @@ public class Card implements Comparable<Card> {
             return true;
         }
         return false;
-
     }
 
     @Override

@@ -33,19 +33,19 @@ public class Player {
         return new Play(this, card);
     }
 
-    private Card calculateBestCardToPlay(Round round, Trick trick, List<Card> validCards) {
-        // run through the rest of the round using each of the players valid cards in turn to see what is the most successfully option
+    private Card calculateBestCardToPlay(Round round, Trick currentTrick, List<Card> validCards) {
+        // run through the rest of the round using each of the players valid cards in turn to see what is the best option
         for (Card card : validCards) {
-            round.createStateForSimulation();
-            // load a copy of the round
-            // - replacing human players with computer players
-            // - swapping their 'actual' cards with a random selection of cards that haven't yet been played
-
-
-            // play the rest of the round
+            Trick simTrick = currentTrick.copyForSimulation();
+            Round simRound = round.copyForSimulation();
+            simRound.resumeTricks(simTrick, card);
+            
+            //round.getResults();
 
             // calculate how many points were won and if this is the best strategy so far
         }
+
+
 
         return validCards.get(0);
     }
@@ -65,8 +65,33 @@ public class Player {
         return playerName;
     }
 
-    public Player createPlayerStateForSimulation(Hand hand) {
+    public Player copyForSimulation() {
         return new Player(this);
+    }
+
+    public boolean playerNameMatches(Player player) {
+        if (playerName.equals(player.toString())) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Player)) {
+            return false;
+        } else if (object == this) {
+            return true;
+        } else if (object.hashCode() == this.hashCode()) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        // add 13 to hashcode to ensure playerName doesn't have the same has as the underlying string
+        return 13 + playerName.hashCode();
     }
 
 }

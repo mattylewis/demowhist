@@ -10,6 +10,12 @@ import java.util.List;
 public class PlayedTricks {
     private List<Trick> playedTricks = new LinkedList<>();
 
+    public PlayedTricks() {}
+
+    private PlayedTricks(List<Trick> playedTricks) {
+        this.playedTricks.addAll(playedTricks);
+    }
+
     public void add(Trick trick) {
         playedTricks.add(trick);
     }
@@ -26,5 +32,9 @@ public class PlayedTricks {
 
     public int size() {
         return playedTricks.size();
+    }
+
+    public PlayedTricks copyForSimulation() {
+        return new PlayedTricks(playedTricks);
     }
 }

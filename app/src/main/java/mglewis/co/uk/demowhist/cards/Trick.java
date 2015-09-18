@@ -20,6 +20,11 @@ public class Trick {
         this.trump = trump;
     }
 
+    private Trick(Suit trump, List<Play> previousPlays) {
+        this.trump = trump;
+        this.plays = new LinkedList<>(previousPlays);
+    }
+
     public void makePlay(Play play) {
         Log.i(LOG_TAG, play.getPlayer() + " played the " + play.getCard());
         plays.add(play);
@@ -36,6 +41,10 @@ public class Trick {
             }
         }
         return currentlyWinningPlay;
+    }
+
+    public Player getWinningPlayer() {
+        return getWinningPlay().getPlayer();
     }
 
     // note: game logic assumes that playA is always the lead suit or a trump
@@ -60,5 +69,21 @@ public class Trick {
 
     public List<Play> getPlays() {
         return plays;
+    }
+
+    public Trick copyForSimulation() {
+        return new Trick(trump, plays);
+    }
+
+    // TODO: need to write a unit test for this
+    public List<Player> getOutstandingPlayers(List<Player> players) {
+        List<Player> outstandingPlayers = new LinkedList<>();
+        for (Play play : plays) {
+            Player player = play.getPlayer();
+            if (!players.contains(player)) {
+                outstandingPlayers.add(player);
+            }
+        }
+        return outstandingPlayers;
     }
 }

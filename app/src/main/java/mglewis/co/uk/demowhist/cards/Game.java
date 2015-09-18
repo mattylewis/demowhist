@@ -24,7 +24,9 @@ public class Game {
     }
 
     private void playRound(int roundNumber) {
-        new Round(playerList, Card.Suit.HEARTS, roundNumber).playTricks();
+        Round round = new Round(playerList, Card.Suit.HEARTS, roundNumber);
+        round.dealHands();
+        round.playTricks();
     }
 
 
