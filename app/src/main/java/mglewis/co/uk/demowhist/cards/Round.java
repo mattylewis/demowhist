@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by MK on 24/08/2015.
@@ -34,8 +35,9 @@ public class Round {
         this.numberOfTricksToPlay = numberOfTricksToPlay;
     }
 
-    public int calculateNumberOfTricksToPlay(int roundNumber) {
-        return 13 - roundNumber;
+    private int calculateNumberOfTricksToPlay(int roundNumber) {
+        return 1;
+        //return 13 - roundNumber;
     }
 
     public void dealHands() {
@@ -55,8 +57,8 @@ public class Round {
         }
     }
 
-    public void resumeTricks(Trick trick, Card nextCardToPlay) {
-        trick = resumeTrick(trick, nextCardToPlay);
+    public void resumeTricks(Trick trick, Play nextPlay) {
+        trick = resumeTrick(trick, nextPlay);
         playedTricks.add(trick);
         rotateToWinner(trick.getWinningPlayer());
         numberOfTricksToPlay = numberOfTricksToPlay - 1;
@@ -72,7 +74,8 @@ public class Round {
         return trick;
     }
 
-    private Trick resumeTrick(Trick trick, Card nextCardToPlay) {
+    private Trick resumeTrick(Trick trick, Play nextPlay) {
+        trick.makePlay(nextPlay);
         List<Player> outstandingPlayers = trick.getOutstandingPlayers(players);
         for (Player player : outstandingPlayers) {
             trick.makePlay(player.playCard(this, trick));
@@ -106,5 +109,9 @@ public class Round {
         List<Player> simPlayers = createSimPlayerList(players);
         setSimPlayerHands(simPlayers);
         return new Round(simPlayers, trumpSuit, playedTricks, numberOfTricksToPlay);
+    }
+
+    public Map<Player, Integer> getResults() {
+        return playedTricks.getResults();
     }
 }

@@ -2,7 +2,9 @@ package mglewis.co.uk.demowhist.cards;
 
 import android.util.Log;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by MK on 23/08/2015.
@@ -12,6 +14,8 @@ public class Player {
 
     private String playerName;
     private Hand currentHand;
+    // TODO: targetScore needs to be a variable that can change based on player input
+    private int targetScore = 2;
 
     public Player(String playerName) {
         this.playerName = playerName;
@@ -34,20 +38,46 @@ public class Player {
     }
 
     private Card calculateBestCardToPlay(Round round, Trick currentTrick, List<Card> validCards) {
-        // run through the rest of the round using each of the players valid cards in turn to see what is the best option
-        for (Card card : validCards) {
+        Map<Card, Integer> cardScores = new HashMap<>();
+        Card card = validCards.get(0);
+        //for (Card card : validCards) {
             Trick simTrick = currentTrick.copyForSimulation();
             Round simRound = round.copyForSimulation();
-            simRound.resumeTricks(simTrick, card);
-            
-            //round.getResults();
+            simRound.resumeTricks(simTrick, new Play(this, card));
+            int score = scoreStrategySuccess(simRound.getResults());
+            cardScores.put(card, cardScores.get(card) + score);
+        //}
+        return getBestCard(cardScores);
+    }
 
-            // calculate how many points were won and if this is the best strategy so far
+    private Card getBestCard(Map<Card, Integer> cardScores) {
+        Map.Entry<Card, Integer> maxEntry = null;
+        for (Map.Entry<Card, Integer> entry : cardScores.entrySet()) {
+            if (maxEntry == null || entry.getValue() > maxEntry.getValue()) {
+                maxEntry = entry;
+            }
         }
+        return maxEntry.getKey();
+    }
 
+    private int scoreStrategySuccess(Map<Player, Integer> roundResults) {
+        int score = 0;
+        for (Player player : roundResults.keySet()) {
+            int tricksWon = roundResults.get(player);
+            if (player.equals(this)) {
+                score += 2 * player.calculateScore(tricksWon);
+            } else {
+                score -= player.calculateScore(tricksWon);
+            }
+        }
+        return score;
+    }
 
-
-        return validCards.get(0);
+    private int calculateScore(int tricksWon) {
+        if (tricksWon == targetScore) {
+            return 10 + tricksWon;
+        }
+        return tricksWon;
     }
 
     public void printHand() {
@@ -74,6 +104,10 @@ public class Player {
             return true;
         }
         return false;
+    }
+
+    public int getTargetScore() {
+        return targetScore;
     }
 
     @Override

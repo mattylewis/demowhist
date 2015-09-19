@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Game {
     private List<Player> playerList = new LinkedList<>();
-    private int numberOfRoundsToPlay = 13;
+    private int numberOfRoundsToPlay = 1;
 
     public Game() {
         playerList.add(new Player("Matt"));
