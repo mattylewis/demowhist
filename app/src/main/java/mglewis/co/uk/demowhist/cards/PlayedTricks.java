@@ -44,7 +44,11 @@ public class PlayedTricks {
         Map<Player, Integer> results = new HashMap<>();
         for (Trick trick : playedTricks) {
             Player winner = trick.getWinningPlayer();
-            results.put(winner, results.get(winner) + 1);
+            if (results.get(winner) == null) {
+                results.put(winner, 1);
+            } else {
+                results.put(winner, results.get(winner)+1);
+            }
         }
         return results;
     }

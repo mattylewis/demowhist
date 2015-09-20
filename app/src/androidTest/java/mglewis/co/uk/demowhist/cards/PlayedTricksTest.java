@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Matthew Lewis on 20/09/2015.
@@ -48,16 +49,31 @@ public class PlayedTricksTest extends TestCase {
         return trick;
     }
 
-    public void testGetPlayedCards() {
+    private PlayedTricks createPlayedTricks() {
         List<Player> players = createPlayers();
         PlayedTricks playedTricks = new PlayedTricks();
         playedTricks.add(createTrick(players, createCards(Card.Suit.DIAMONDS)));
         playedTricks.add(createTrick(players, createCards(Card.Suit.CLUBS)));
         playedTricks.add(createTrick(players, createCards(Card.Suit.SPADES)));
-        List<Card> playedCards = playedTricks.getPlayedCards();
+        return  playedTricks;
+    }
+
+    public void testGetPlayedCards() {
+        List<Card> playedCards = createPlayedTricks().getPlayedCards();
         assertEquals("Testing the number of played cards", 12, playedCards.size());
         Card card = new Card(Card.Suit.CLUBS, Card.Value.ACE);
         assertEquals("Testing that the played cards list contains " + card, true, playedCards.contains(card));
     }
 
+    public void testGetResults() {
+        PlayedTricks playedTricks = createPlayedTricks();
+        Map<Player, Integer> results = playedTricks.getResults();
+        Player winningPlayer = null;
+        for ( Player player : results.keySet()) {
+            if ( winningPlayer == null || results.get(player) > results.get(winningPlayer)) {
+                winningPlayer = player;
+            }
+        }
+        assertEquals("Testing that the winner won all 3 tricks", 3, (int)results.get(winningPlayer));
+    }
 }
