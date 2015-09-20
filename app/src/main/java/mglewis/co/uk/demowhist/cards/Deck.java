@@ -35,7 +35,6 @@ public class Deck {
         return deck;
     }
 
-
     public Hand deal(int cards) {
         List<Card> hand = new LinkedList<Card>();
         for (int i = 0; i < cards; i++) {

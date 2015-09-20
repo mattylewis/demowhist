@@ -14,8 +14,7 @@ public class Player {
 
     private String playerName;
     private Hand currentHand;
-    // TODO: targetScore needs to be a variable that can change based on player input
-    private int targetScore = 2;
+    private int targetScore;
 
     public Player(String playerName) {
         this.playerName = playerName;
@@ -104,6 +103,10 @@ public class Player {
             return true;
         }
         return false;
+    }
+
+    public void setTargetScore(int targetScore) {
+        this.targetScore = targetScore;
     }
 
     public int getTargetScore() {

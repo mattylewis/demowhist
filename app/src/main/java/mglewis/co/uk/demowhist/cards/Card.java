@@ -4,6 +4,14 @@ package mglewis.co.uk.demowhist.cards;
  * Created by Matthew Lewis on 23/08/2015.
  */
 public class Card implements Comparable<Card> {
+    public enum Suit {
+        CLUBS, DIAMONDS, SPADES, HEARTS
+    }
+
+    public enum Value {
+        TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
+    }
+
     private Suit suit;
     private Value value;
 
@@ -61,11 +69,4 @@ public class Card implements Comparable<Card> {
         return 1 + ((getSuitOrdinal() * 193) + (getValueOrdinal() * 3907));
     }
 
-    public enum Suit {
-        CLUBS, DIAMONDS, SPADES, HEARTS
-    }
-
-    public enum Value {
-        TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
-    }
 }

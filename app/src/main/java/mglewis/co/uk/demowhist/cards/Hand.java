@@ -10,8 +10,6 @@ import static mglewis.co.uk.demowhist.cards.Card.Suit;
  * Created by MK on 23/08/2015.
  */
 public class Hand {
-    private static final String LOG_TAG = "Player";
-
     List<Card> cards;
 
     public Hand(List<Card> cards) {
