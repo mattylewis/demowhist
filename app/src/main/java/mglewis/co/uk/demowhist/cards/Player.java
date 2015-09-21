@@ -38,15 +38,25 @@ public class Player {
 
     private Card calculateBestCardToPlay(Round round, Trick currentTrick, List<Card> validCards) {
         Map<Card, Integer> cardScores = new HashMap<>();
-        Card card = validCards.get(0);
-        //for (Card card : validCards) {
-            Trick simTrick = currentTrick.copyForSimulation();
-            Round simRound = round.copyForSimulation();
-            simRound.resumeTricks(simTrick, new Play(this, card));
-            int score = scoreStrategySuccess(simRound.getResults());
-            cardScores.put(card, cardScores.get(card) + score);
+        //for (int i = 0; i < 5; i++) {
+            for (Card card : validCards) {
+                Trick simTrick = currentTrick.copyForSimulation();
+                Round simRound = round.copyForSimulation();
+                simRound.resumeTricks(simTrick, new Play(this, card));
+                int score = scoreStrategySuccess(simRound.getResults());
+                cardScores = updateCumulativeCardScore(cardScores, card, score);
+            }
         //}
         return getBestCard(cardScores);
+    }
+
+    private Map<Card, Integer> updateCumulativeCardScore(Map<Card, Integer> cardScores, Card card, int score) {
+        if (cardScores.get(card) == null) {
+            cardScores.put(card, score);
+        } else {
+            cardScores.put(card, score + cardScores.get(card));
+        }
+        return cardScores;
     }
 
     private Card getBestCard(Map<Card, Integer> cardScores) {

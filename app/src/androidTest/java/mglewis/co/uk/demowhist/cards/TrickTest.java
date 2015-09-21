@@ -2,6 +2,7 @@ package mglewis.co.uk.demowhist.cards;
 
 import junit.framework.TestCase;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -91,5 +92,32 @@ public class TrickTest extends TestCase {
         testNoTrumpPlayed(playerList);
         testDiscardCardsPlayedWithTrumps(playerList);
         testDiscardCardsPlayedNoTrumps(playerList);
+    }
+
+    private Trick createIncompleteTrick(List<Player> players, List<Card> cards) {
+        Trick trick = new Trick(Card.Suit.HEARTS);
+        Iterator<Player> playerIterator = players.iterator();
+        Iterator<Card> cardIterator = cards.iterator();
+        while (playerIterator.hasNext() && cardIterator.hasNext()) {
+            trick.makePlay(new Play(playerIterator.next(), cardIterator.next()));
+        }
+        return trick;
+    }
+
+    private List<Card> createCards() {
+        List<Card> cards = new LinkedList<>();
+        cards.add(new Card(Card.Suit.HEARTS, Card.Value.FOUR));
+        cards.add(new Card(Card.Suit.HEARTS, Card.Value.KING));
+        cards.add(new Card(Card.Suit.HEARTS, Card.Value.FIVE));
+        cards.add(new Card(Card.Suit.DIAMONDS, Card.Value.ACE));
+        return cards;
+    }
+
+    public void testGetOutstandingPlayers() {
+        List<Player> players = createPlayers();
+        List<Card> cards = createCards();
+        Trick trick = createIncompleteTrick(players.subList(0, 2), cards.subList(0, 2));
+        List<Player> outstandingPlayers = trick.getOutstandingPlayers(players);
+        assertEquals("Checking the length of the outstanding players list", 2, outstandingPlayers.size());
     }
 }

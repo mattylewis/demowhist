@@ -37,7 +37,7 @@ public class Round {
 
     private int calculateNumberOfTricksToPlay(int roundNumber) {
         return 1;
-        //return 13 - roundNumber;
+        //return 2 - roundNumber;
     }
 
     public void dealHands() {
@@ -61,7 +61,7 @@ public class Round {
         trick = resumeTrick(trick, nextPlay);
         playedTricks.add(trick);
         rotateToWinner(trick.getWinningPlayer());
-        numberOfTricksToPlay = numberOfTricksToPlay - 1;
+        numberOfTricksToPlay -= 1;
         playTricks();
     }
 
@@ -85,7 +85,7 @@ public class Round {
 
     private void rotateToWinner(Player winner) {
         Collections.rotate(players, players.size() - players.indexOf(winner));
-        Log.i(LOG_TAG, "Next player is: " + players.get(0));
+        //Log.i(LOG_TAG, "Next player is: " + players.get(0));
     }
 
     private List<Player> createSimPlayerList(List<Player> players) {
@@ -109,6 +109,11 @@ public class Round {
         List<Player> simPlayers = createSimPlayerList(players);
         setSimPlayerHands(simPlayers);
         return new Round(simPlayers, trumpSuit, playedTricks, numberOfTricksToPlay);
+    }
+
+    public void printSummary() {
+        Log.i(LOG_TAG, "Printing play by play");
+        playedTricks.printPlayByPlay();
     }
 
     public Map<Player, Integer> getResults() {

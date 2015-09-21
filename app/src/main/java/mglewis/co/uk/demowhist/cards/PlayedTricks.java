@@ -53,4 +53,10 @@ public class PlayedTricks {
         return results;
     }
 
+    public void printPlayByPlay() {
+        for (Trick trick : playedTricks) {
+            trick.printPlayByPlay();
+        }
+    }
+
 }

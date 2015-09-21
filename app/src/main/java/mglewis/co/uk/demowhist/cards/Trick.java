@@ -26,7 +26,7 @@ public class Trick {
     }
 
     public void makePlay(Play play) {
-        Log.i(LOG_TAG, play.getPlayer() + " played the " + play.getCard());
+        //Log.i(LOG_TAG, play.getPlayer() + " played the " + play.getCard());
         plays.add(play);
     }
 
@@ -75,15 +75,28 @@ public class Trick {
         return new Trick(trump, plays);
     }
 
-    // TODO: need to write a unit test for this
     public List<Player> getOutstandingPlayers(List<Player> players) {
         List<Player> outstandingPlayers = new LinkedList<>();
-        for (Play play : plays) {
-            Player player = play.getPlayer();
-            if (!players.contains(player)) {
+        for (Player player : players) {
+            if (!playsContainPlayer(player)) {
                 outstandingPlayers.add(player);
             }
         }
         return outstandingPlayers;
+    }
+
+    private boolean playsContainPlayer(Player player) {
+        for (Play play : plays) {
+            if (play.getPlayer().equals(player)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void printPlayByPlay() {
+        for (Play play : plays) {
+            Log.i(LOG_TAG, play.toString());
+        }
     }
 }

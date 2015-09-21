@@ -76,4 +76,10 @@ public class PlayedTricksTest extends TestCase {
         }
         assertEquals("Testing that the winner won all 3 tricks", 3, (int)results.get(winningPlayer));
     }
+
+    public void testCopyForSimulation() {
+        PlayedTricks initial = createPlayedTricks();
+        PlayedTricks copy = initial.copyForSimulation();
+        assertEquals("Testing that the copy has a different reference", true, initial != copy);
+    }
 }
