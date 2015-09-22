@@ -32,11 +32,13 @@ public class Player {
     public Play playCard(Round round, Trick trick) {
         List<Card> validCards = currentHand.getValidCards(trick);
         Card card = calculateBestCardToPlay(round, trick, validCards);
+        // TODO: card isn't removed at the beginning of next trick (player still has 3 cards in simulation after round 2 starts
         currentHand.removeCard(card);
         return new Play(this, card);
     }
 
     private Card calculateBestCardToPlay(Round round, Trick currentTrick, List<Card> validCards) {
+        Log.i(LOG_TAG, "Calculating best card for " + this.toString() + " with " + validCards.size() + "valid cards");
         Map<Card, Integer> cardScores = new HashMap<>();
         //for (int i = 0; i < 5; i++) {
             for (Card card : validCards) {

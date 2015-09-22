@@ -36,7 +36,7 @@ public class Round {
     }
 
     private int calculateNumberOfTricksToPlay(int roundNumber) {
-        return 1;
+        return 3;
         //return 2 - roundNumber;
     }
 
