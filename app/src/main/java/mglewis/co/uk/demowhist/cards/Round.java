@@ -18,21 +18,28 @@ public class Round {
     private PlayedTricks playedTricks = new PlayedTricks();
     private Card.Suit trumpSuit;
     private int numberOfTricksToPlay;
+    private int simulationDepth;
+    private Player simulationFor;
+    private Player simulationParent;
 
     public Round(List<Player> players, Card.Suit trumpSuit, int roundNumber) {
         Log.i(LOG_TAG, "Starting Round #" + roundNumber);
         this.players = players;
         this.trumpSuit = trumpSuit;
         numberOfTricksToPlay = calculateNumberOfTricksToPlay(roundNumber);
-        Log.i(LOG_TAG, "Round #" + roundNumber + " will consist of " + numberOfTricksToPlay + " tricks");
+        simulationDepth = 0;
+        Log.i(LOG_TAG, "Round #" + roundNumber + " will consist of " + numberOfTricksToPlay + " tricks (Sim depth is " + simulationDepth + ")");
     }
 
     // private constructor for use creating a copy of an existing round state for ai simulation
-    private Round(List<Player> players, Card.Suit trumpSuit, PlayedTricks playedTricks, int numberOfTricksToPlay) {
+    private Round(List<Player> players, Card.Suit trumpSuit, PlayedTricks playedTricks, int numberOfTricksToPlay, int simulationDepth, Player simulationFor, Player simulationParent) {
         this.players = players;
         this.trumpSuit = trumpSuit;
         this.playedTricks = playedTricks.copyForSimulation();
         this.numberOfTricksToPlay = numberOfTricksToPlay;
+        this.simulationDepth = simulationDepth + 1;
+        this.simulationFor = simulationFor;
+        this.simulationParent = simulationParent == null ? simulationFor : simulationParent;
     }
 
     private int calculateNumberOfTricksToPlay(int roundNumber) {
@@ -67,6 +74,12 @@ public class Round {
 
     private Trick playTrick() {
         Trick trick = new Trick(trumpSuit);
+
+        Log.i(LOG_TAG, "Playing trick with sim depth of " + simulationDepth + " simulated by " + simulationFor + " with parent sim player " + simulationParent);
+        Log.i(LOG_TAG, "Moves made so far: ");
+        trick.printPlayByPlay();
+
+        Log.i(LOG_TAG, "Starting a new trick");
 //        Log.i(LOG_TAG, "The trump suit is: " + trumpSuit);
         for (Player player : players) {
             trick.makePlay(player.playCard(this, trick));
@@ -75,8 +88,13 @@ public class Round {
     }
 
     private Trick resumeTrick(Trick trick, Play nextPlay) {
+        Log.i(LOG_TAG, "Resuming trick with sim depth of " + simulationDepth + " simulated by " + simulationFor + " with parent " + simulationParent);
+        Log.i(LOG_TAG, "Moves made so far: ");
+        trick.printPlayByPlay();
+
         trick.makePlay(nextPlay);
         List<Player> outstandingPlayers = trick.getOutstandingPlayers(players);
+        Log.i(LOG_TAG, "There are " + outstandingPlayers.size() + " players left to play in the trick");
         for (Player player : outstandingPlayers) {
             trick.makePlay(player.playCard(this, trick));
         }
@@ -105,10 +123,10 @@ public class Round {
         }
     }
 
-    public Round copyForSimulation() {
+    public Round copyForSimulation(Player simulationPlayer) {
         List<Player> simPlayers = createSimPlayerList(players);
         setSimPlayerHands(simPlayers);
-        return new Round(simPlayers, trumpSuit, playedTricks, numberOfTricksToPlay);
+        return new Round(simPlayers, trumpSuit, playedTricks, numberOfTricksToPlay, simulationDepth, simulationPlayer, simulationParent);
     }
 
     public void printSummary() {

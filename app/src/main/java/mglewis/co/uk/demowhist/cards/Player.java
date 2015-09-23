@@ -11,7 +11,6 @@ import java.util.Map;
  */
 public class Player {
     private static final String LOG_TAG = "Player";
-
     private String playerName;
     private Hand currentHand;
     private int targetScore;
@@ -38,14 +37,17 @@ public class Player {
     }
 
     private Card calculateBestCardToPlay(Round round, Trick currentTrick, List<Card> validCards) {
-        Log.i(LOG_TAG, "Calculating best card for " + this.toString() + " with " + validCards.size() + "valid cards");
+        Log.i(LOG_TAG, "Calculating best card for " + this.toString() + " with " + currentHand.size() + " cards (" + validCards.size() + " valid)");
         Map<Card, Integer> cardScores = new HashMap<>();
         //for (int i = 0; i < 5; i++) {
             for (Card card : validCards) {
+                Log.i(LOG_TAG, "Testing the " + card);
+                currentHand.removeCard(card);
                 Trick simTrick = currentTrick.copyForSimulation();
-                Round simRound = round.copyForSimulation();
+                Round simRound = round.copyForSimulation(this);
                 simRound.resumeTricks(simTrick, new Play(this, card));
                 int score = scoreStrategySuccess(simRound.getResults());
+                Log.i(LOG_TAG, playerName + " scored " + score + " with there strategy of playing the " + card);
                 cardScores = updateCumulativeCardScore(cardScores, card, score);
             }
         //}
@@ -68,6 +70,7 @@ public class Player {
                 maxEntry = entry;
             }
         }
+        Log.i(LOG_TAG, "FINALLY DECIDED ON THE " + maxEntry.getKey());
         return maxEntry.getKey();
     }
 

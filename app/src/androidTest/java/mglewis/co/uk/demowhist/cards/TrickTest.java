@@ -94,7 +94,7 @@ public class TrickTest extends TestCase {
         testDiscardCardsPlayedNoTrumps(playerList);
     }
 
-    private Trick createIncompleteTrick(List<Player> players, List<Card> cards) {
+    private Trick createTrick(List<Player> players, List<Card> cards) {
         Trick trick = new Trick(Card.Suit.HEARTS);
         Iterator<Player> playerIterator = players.iterator();
         Iterator<Card> cardIterator = cards.iterator();
@@ -116,8 +116,16 @@ public class TrickTest extends TestCase {
     public void testGetOutstandingPlayers() {
         List<Player> players = createPlayers();
         List<Card> cards = createCards();
-        Trick trick = createIncompleteTrick(players.subList(0, 2), cards.subList(0, 2));
+        Trick trick = createTrick(players.subList(0, 2), cards.subList(0, 2));
         List<Player> outstandingPlayers = trick.getOutstandingPlayers(players);
         assertEquals("Checking the length of the outstanding players list", 2, outstandingPlayers.size());
+    }
+
+    public void testCopyForSimulation() {
+        List<Player> players = createPlayers();
+        List<Card> cards = createCards();
+        Trick trick = createTrick(players, cards);
+        Trick trickCopy = trick.copyForSimulation();
+        assertEquals("Checking that the copy of the trick has the same plays", trick.getPlays(), trickCopy.getPlays());
     }
 }

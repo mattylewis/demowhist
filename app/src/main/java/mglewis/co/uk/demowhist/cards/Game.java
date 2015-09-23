@@ -24,8 +24,8 @@ public class Game extends IntentService {
     public void setupGame() {
         players.add(new Player("Matt"));
         players.add(new Player("Katie"));
-        players.add(new Player("Ellie"));
-        players.add(new Player("Kara"));
+        //players.add(new Player("Ellie"));
+        //players.add(new Player("Kara"));
     }
 
     public void playRounds() {
