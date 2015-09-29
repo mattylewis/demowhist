@@ -1,4 +1,4 @@
-package mglewis.co.uk.demowhist.cards;
+package mglewis.co.uk.demowhist.game;
 
 import android.util.Log;
 
@@ -7,22 +7,29 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import mglewis.co.uk.demowhist.cards.Card;
+import mglewis.co.uk.demowhist.cards.Deck;
+import mglewis.co.uk.demowhist.cards.Hand;
+import mglewis.co.uk.demowhist.cards.Play;
+import mglewis.co.uk.demowhist.player.HumanPlayer;
+import mglewis.co.uk.demowhist.player.Player;
+
 /**
  * Created by MK on 24/08/2015.
  */
 public class Round {
-    private static final String LOG_TAG = "Round";
+    private static final String LOG_TAG = "DWST:Round";
 
-    private List<Player> players;
+    private List<HumanPlayer> players;
     private Deck deck = new Deck();
     private PlayedTricks playedTricks = new PlayedTricks();
     private Card.Suit trumpSuit;
     private int numberOfTricksToPlay;
     private int simulationDepth;
-    private Player simulationFor;
-    private Player simulationParent;
+    private HumanPlayer simulationFor;
+    private HumanPlayer simulationParent;
 
-    public Round(List<Player> players, Card.Suit trumpSuit, int roundNumber) {
+    public Round(List<HumanPlayer> players, Card.Suit trumpSuit, int roundNumber) {
         Log.i(LOG_TAG, "Starting Round #" + roundNumber);
         this.players = players;
         this.trumpSuit = trumpSuit;
@@ -32,7 +39,7 @@ public class Round {
     }
 
     // private constructor for use creating a copy of an existing round state for ai simulation
-    private Round(List<Player> players, Card.Suit trumpSuit, PlayedTricks playedTricks, int numberOfTricksToPlay, int simulationDepth, Player simulationFor, Player simulationParent) {
+    private Round(List<HumanPlayer> players, Card.Suit trumpSuit, PlayedTricks playedTricks, int numberOfTricksToPlay, int simulationDepth, HumanPlayer simulationFor, HumanPlayer simulationParent) {
         this.players = players;
         this.trumpSuit = trumpSuit;
         this.playedTricks = playedTricks.copyForSimulation();
@@ -44,13 +51,14 @@ public class Round {
 
     private int calculateNumberOfTricksToPlay(int roundNumber) {
         return 3;
-        //return 2 - roundNumber;
+        //int tricksToPlay = 4 - roundNumber ;
+        //return tricksToPlay;
     }
 
     public void dealHands() {
-        for (Player player : players) {
+        for (HumanPlayer player : players) {
             player.setHand(deck.deal(numberOfTricksToPlay));
-            player.printHand();
+            player.getHand().printHand();
         }
     }
 
@@ -81,7 +89,7 @@ public class Round {
 
         Log.i(LOG_TAG, "Starting a new trick");
 //        Log.i(LOG_TAG, "The trump suit is: " + trumpSuit);
-        for (Player player : players) {
+        for (HumanPlayer player : players) {
             trick.makePlay(player.playCard(this, trick));
         }
         return trick;
@@ -93,20 +101,21 @@ public class Round {
         trick.printPlayByPlay();
 
         trick.makePlay(nextPlay);
-        List<Player> outstandingPlayers = trick.getOutstandingPlayers(players);
+        List<HumanPlayer> outstandingPlayers = trick.getOutstandingPlayers(players);
         Log.i(LOG_TAG, "There are " + outstandingPlayers.size() + " players left to play in the trick");
-        for (Player player : outstandingPlayers) {
+        for (HumanPlayer player : outstandingPlayers) {
             trick.makePlay(player.playCard(this, trick));
         }
         return trick;
     }
 
     private void rotateToWinner(Player winner) {
+        Log.i(LOG_TAG, "The winner is: " + winner);
         Collections.rotate(players, players.size() - players.indexOf(winner));
-        //Log.i(LOG_TAG, "Next player is: " + players.get(0));
+        Log.i(LOG_TAG, "The next player is: " + players.get(0));
     }
 
-    private List<Player> createSimPlayerList(List<Player> players) {
+    private List<Player> createSimPlayerList(List<HumanPlayer> players) {
         List<Player> simPlayers = new LinkedList<>();
         for (Player player : this.players) {
             simPlayers.add(player.copyForSimulation());
@@ -117,9 +126,11 @@ public class Round {
     private void setSimPlayerHands(List<Player> simPlayers) {
         Deck unplayedCards = new Deck(playedTricks.getPlayedCards());
         int remainingCardsInPlayersHands = numberOfTricksToPlay - playedTricks.size();
-        for (Player simPlayer : simPlayers) {
-            Hand hand = unplayedCards.deal(remainingCardsInPlayersHands);
+        for (HumanPlayer simPlayer : simPlayers) {
+            int requiredHandSize = simPlayer.getHand().size();
+            Hand hand = unplayedCards.deal(requiredHandSize);
             simPlayer.setHand(hand);
+            Log.i(LOG_TAG, "Creating a sim player " + simPlayer + " with a hand size of " + requiredHandSize);
         }
     }
 

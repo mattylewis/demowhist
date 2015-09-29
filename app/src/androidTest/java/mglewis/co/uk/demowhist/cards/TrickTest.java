@@ -6,21 +6,24 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import mglewis.co.uk.demowhist.game.Trick;
+import mglewis.co.uk.demowhist.player.HumanPlayer;
+
 /**
  * Created by Matthew Lewis on 24/08/2015.
  */
 public class TrickTest extends TestCase {
 
-    private List<Player> createPlayers() {
-        List<Player> playerList = new LinkedList<>();
-        playerList.add(new Player("Matt"));
-        playerList.add(new Player("Katie"));
-        playerList.add(new Player("Ellie"));
-        playerList.add(new Player("Kara"));
+    private List<HumanPlayer> createPlayers() {
+        List<HumanPlayer> playerList = new LinkedList<>();
+        playerList.add(new HumanPlayer("Matt"));
+        playerList.add(new HumanPlayer("Katie"));
+        playerList.add(new HumanPlayer("Ellie"));
+        playerList.add(new HumanPlayer("Kara"));
         return playerList;
     }
 
-    private Play calculateResult(List<Player> playerList, List<Card> cardList, Card.Suit trumpSuit) {
+    private Play calculateResult(List<HumanPlayer> playerList, List<Card> cardList, Card.Suit trumpSuit) {
         Trick trick = new Trick(trumpSuit);
         for (int i = 0; i < playerList.size(); i++) {
             trick.makePlay(new Play(playerList.get(i), cardList.get(i)));
@@ -28,7 +31,7 @@ public class TrickTest extends TestCase {
         return trick.getWinningPlay();
     }
 
-    private void testTrumpLead(List<Player> playerList) {
+    private void testTrumpLead(List<HumanPlayer> playerList) {
         List<Card> cardList = new LinkedList<>();
         cardList.add(new Card(Card.Suit.CLUBS, Card.Value.KING));
         cardList.add(new Card(Card.Suit.CLUBS, Card.Value.QUEEN));
@@ -36,12 +39,12 @@ public class TrickTest extends TestCase {
         cardList.add(new Card(Card.Suit.CLUBS, Card.Value.TWO));
         Play winningPlay = calculateResult(playerList, cardList, Card.Suit.CLUBS);
         Card expectedWinningCard = cardList.get(0);
-        Player expectedWinningPlayer = playerList.get(0);
+        HumanPlayer expectedWinningPlayer = playerList.get(0);
         assertEquals("Expecting winning card to be the KING of CLUBS", expectedWinningCard, winningPlay.getCard());
         assertEquals("Expecting winning player to be Matt", expectedWinningPlayer, winningPlay.getPlayer());
     }
 
-    private void testTrumpPlay(List<Player> playerList) {
+    private void testTrumpPlay(List<HumanPlayer> playerList) {
         List<Card> cardList = new LinkedList<>();
         cardList.add(new Card(Card.Suit.SPADES, Card.Value.KING));
         cardList.add(new Card(Card.Suit.SPADES, Card.Value.QUEEN));
@@ -52,7 +55,7 @@ public class TrickTest extends TestCase {
         assertEquals("Expecting winning player to be Kara", playerList.get(3), winningPlay.getPlayer());
     }
 
-    private void testNoTrumpPlayed(List<Player> playerList) {
+    private void testNoTrumpPlayed(List<HumanPlayer> playerList) {
         List<Card> cardList = new LinkedList<>();
         cardList.add(new Card(Card.Suit.DIAMONDS, Card.Value.THREE));
         cardList.add(new Card(Card.Suit.DIAMONDS, Card.Value.SIX));
@@ -63,7 +66,7 @@ public class TrickTest extends TestCase {
         assertEquals("Expecting winning player to be Katie", playerList.get(1), winningPlay.getPlayer());
     }
 
-    private void testDiscardCardsPlayedWithTrumps(List<Player> playerList) {
+    private void testDiscardCardsPlayedWithTrumps(List<HumanPlayer> playerList) {
         List<Card> cardList = new LinkedList<>();
         cardList.add(new Card(Card.Suit.HEARTS, Card.Value.FOUR));
         cardList.add(new Card(Card.Suit.CLUBS, Card.Value.KING));
@@ -74,7 +77,7 @@ public class TrickTest extends TestCase {
         assertEquals("Expecting winning player to be Katie", playerList.get(1), winningPlay.getPlayer());
     }
 
-    private void testDiscardCardsPlayedNoTrumps(List<Player> playerList) {
+    private void testDiscardCardsPlayedNoTrumps(List<HumanPlayer> playerList) {
         List<Card> cardList = new LinkedList<>();
         cardList.add(new Card(Card.Suit.HEARTS, Card.Value.FOUR));
         cardList.add(new Card(Card.Suit.HEARTS, Card.Value.KING));
@@ -86,7 +89,7 @@ public class TrickTest extends TestCase {
     }
 
     public void testGetWinningPlay() throws Exception {
-        List<Player> playerList = createPlayers();
+        List<HumanPlayer> playerList = createPlayers();
         testTrumpLead(playerList);
         testTrumpPlay(playerList);
         testNoTrumpPlayed(playerList);
@@ -94,9 +97,9 @@ public class TrickTest extends TestCase {
         testDiscardCardsPlayedNoTrumps(playerList);
     }
 
-    private Trick createTrick(List<Player> players, List<Card> cards) {
+    private Trick createTrick(List<HumanPlayer> players, List<Card> cards) {
         Trick trick = new Trick(Card.Suit.HEARTS);
-        Iterator<Player> playerIterator = players.iterator();
+        Iterator<HumanPlayer> playerIterator = players.iterator();
         Iterator<Card> cardIterator = cards.iterator();
         while (playerIterator.hasNext() && cardIterator.hasNext()) {
             trick.makePlay(new Play(playerIterator.next(), cardIterator.next()));
@@ -114,15 +117,15 @@ public class TrickTest extends TestCase {
     }
 
     public void testGetOutstandingPlayers() {
-        List<Player> players = createPlayers();
+        List<HumanPlayer> players = createPlayers();
         List<Card> cards = createCards();
         Trick trick = createTrick(players.subList(0, 2), cards.subList(0, 2));
-        List<Player> outstandingPlayers = trick.getOutstandingPlayers(players);
+        List<HumanPlayer> outstandingPlayers = trick.getOutstandingPlayers(players);
         assertEquals("Checking the length of the outstanding players list", 2, outstandingPlayers.size());
     }
 
     public void testCopyForSimulation() {
-        List<Player> players = createPlayers();
+        List<HumanPlayer> players = createPlayers();
         List<Card> cards = createCards();
         Trick trick = createTrick(players, cards);
         Trick trickCopy = trick.copyForSimulation();

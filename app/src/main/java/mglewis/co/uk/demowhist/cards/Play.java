@@ -1,5 +1,7 @@
 package mglewis.co.uk.demowhist.cards;
 
+import mglewis.co.uk.demowhist.player.Player;
+
 /**
  * Created by Matthew Lewis on 24/08/2015.
  */

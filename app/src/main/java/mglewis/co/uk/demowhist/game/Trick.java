@@ -1,9 +1,13 @@
-package mglewis.co.uk.demowhist.cards;
+package mglewis.co.uk.demowhist.game;
 
 import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import mglewis.co.uk.demowhist.cards.Play;
+import mglewis.co.uk.demowhist.player.HumanPlayer;
+import mglewis.co.uk.demowhist.player.Player;
 
 import static mglewis.co.uk.demowhist.cards.Card.Suit;
 
@@ -11,7 +15,7 @@ import static mglewis.co.uk.demowhist.cards.Card.Suit;
  * Created by MK on 23/08/2015.
  */
 public class Trick {
-    private static final String LOG_TAG = "Trick";
+    private static final String LOG_TAG = "DWST:Trick";
 
     private List<Play> plays = new LinkedList<>();
     private Suit trump;
@@ -75,9 +79,9 @@ public class Trick {
         return new Trick(trump, plays);
     }
 
-    public List<Player> getOutstandingPlayers(List<Player> players) {
-        List<Player> outstandingPlayers = new LinkedList<>();
-        for (Player player : players) {
+    public List<HumanPlayer> getOutstandingPlayers(List<HumanPlayer> players) {
+        List<HumanPlayer> outstandingPlayers = new LinkedList<>();
+        for (HumanPlayer player : players) {
             if (!playsContainPlayer(player)) {
                 outstandingPlayers.add(player);
             }
@@ -85,7 +89,7 @@ public class Trick {
         return outstandingPlayers;
     }
 
-    private boolean playsContainPlayer(Player player) {
+    private boolean playsContainPlayer(HumanPlayer player) {
         for (Play play : plays) {
             if (play.getPlayer().equals(player)) {
                 return true;
@@ -95,8 +99,12 @@ public class Trick {
     }
 
     public void printPlayByPlay() {
-        for (Play play : plays) {
-            Log.i(LOG_TAG, play.toString());
+        if (plays.size() == 0) {
+            Log.i(LOG_TAG, "No plays have been made yet");
+        } else {
+            for (Play play : plays) {
+                Log.i(LOG_TAG, play.toString());
+            }
         }
     }
 }

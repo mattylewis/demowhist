@@ -1,8 +1,12 @@
 package mglewis.co.uk.demowhist.cards;
 
+import android.util.Log;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import mglewis.co.uk.demowhist.game.Trick;
 
 import static mglewis.co.uk.demowhist.cards.Card.Suit;
 
@@ -10,7 +14,12 @@ import static mglewis.co.uk.demowhist.cards.Card.Suit;
  * Created by MK on 23/08/2015.
  */
 public class Hand {
-    List<Card> cards;
+    private static final String LOG_TAG = "DWST:Hand";
+    private List<Card> cards;
+
+    public Hand() {
+        cards = new LinkedList<>();
+    }
 
     public Hand(List<Card> cards) {
         this.cards = cards;
@@ -59,5 +68,16 @@ public class Hand {
             return true;
         }
         return false;
+    }
+
+    public void printHand() {
+        if (cards == null || cards.size() == 0) {
+            Log.i(LOG_TAG, "Hand is empty");
+        } else {
+            Log.i(LOG_TAG, "Hand contains " + cards.size() + " cards:");
+            for (Card card : cards) {
+                Log.i(LOG_TAG, "- " + card.toString());
+            }
+        }
     }
 }

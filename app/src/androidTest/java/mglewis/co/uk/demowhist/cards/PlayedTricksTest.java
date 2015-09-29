@@ -7,17 +7,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import mglewis.co.uk.demowhist.game.PlayedTricks;
+import mglewis.co.uk.demowhist.game.Trick;
+import mglewis.co.uk.demowhist.player.HumanPlayer;
+
 /**
  * Created by Matthew Lewis on 20/09/2015.
  */
 public class PlayedTricksTest extends TestCase {
 
-    private List<Player> createPlayers() {
-        List<Player> players = new LinkedList<>();
-        players.add(new Player("Player1"));
-        players.add(new Player("Player2"));
-        players.add(new Player("Player3"));
-        players.add(new Player("Player4"));
+    private List<HumanPlayer> createPlayers() {
+        List<HumanPlayer> players = new LinkedList<>();
+        players.add(new HumanPlayer("Player1"));
+        players.add(new HumanPlayer("Player2"));
+        players.add(new HumanPlayer("Player3"));
+        players.add(new HumanPlayer("Player4"));
         return players;
     }
 
@@ -30,9 +34,9 @@ public class PlayedTricksTest extends TestCase {
         return cards;
     }
 
-    private List<Play> createPlays(List<Player> players, List<Card> cards) {
+    private List<Play> createPlays(List<HumanPlayer> players, List<Card> cards) {
         List<Play> plays = new LinkedList<>();
-        Iterator<Player> playerIterator = players.iterator();
+        Iterator<HumanPlayer> playerIterator = players.iterator();
         Iterator<Card> cardIterator = cards.iterator();
         while (playerIterator.hasNext() && cardIterator.hasNext()) {
             plays.add(new Play(playerIterator.next(), cardIterator.next()));
@@ -40,7 +44,7 @@ public class PlayedTricksTest extends TestCase {
         return plays;
     }
 
-    private Trick createTrick(List<Player> players, List<Card> cards) {
+    private Trick createTrick(List<HumanPlayer> players, List<Card> cards) {
         Trick trick = new Trick(Card.Suit.CLUBS);
         List<Play> plays = createPlays(players, cards);
         for (Play play : plays) {
@@ -50,7 +54,7 @@ public class PlayedTricksTest extends TestCase {
     }
 
     private PlayedTricks createPlayedTricks() {
-        List<Player> players = createPlayers();
+        List<HumanPlayer> players = createPlayers();
         PlayedTricks playedTricks = new PlayedTricks();
         playedTricks.add(createTrick(players, createCards(Card.Suit.DIAMONDS)));
         playedTricks.add(createTrick(players, createCards(Card.Suit.CLUBS)));
@@ -67,9 +71,9 @@ public class PlayedTricksTest extends TestCase {
 
     public void testGetResults() {
         PlayedTricks playedTricks = createPlayedTricks();
-        Map<Player, Integer> results = playedTricks.getResults();
-        Player winningPlayer = null;
-        for ( Player player : results.keySet()) {
+        Map<HumanPlayer, Integer> results = playedTricks.getResults();
+        HumanPlayer winningPlayer = null;
+        for ( HumanPlayer player : results.keySet()) {
             if ( winningPlayer == null || results.get(player) > results.get(winningPlayer)) {
                 winningPlayer = player;
             }

@@ -1,4 +1,4 @@
-package mglewis.co.uk.demowhist.cards;
+package mglewis.co.uk.demowhist.game;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -8,24 +8,28 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import mglewis.co.uk.demowhist.cards.Card;
+import mglewis.co.uk.demowhist.player.ComputerPlayer;
+import mglewis.co.uk.demowhist.player.HumanPlayer;
+
 /**
  * Created by MK on 24/08/2015.
  */
 public class Game extends IntentService {
-    private static final String LOG_TAG = "Game";
+    private static final String LOG_TAG = "DWST:Game";
 
-    private List<Player> players = new LinkedList<>();
-    private int numberOfRoundsToPlay = 1;
+    private List<HumanPlayer> players = new LinkedList<>();
+    private int numberOfRoundsToPlay = 2;
 
     public Game() {
         super("game_service");
     }
 
     public void setupGame() {
-        players.add(new Player("Matt"));
-        players.add(new Player("Katie"));
-        //players.add(new Player("Ellie"));
-        //players.add(new Player("Kara"));
+        players.add(new HumanPlayer("Matt"));
+        players.add(new ComputerPlayer("Katie"));
+        players.add(new ComputerPlayer("Ellie"));
+        players.add(new ComputerPlayer("Kara"));
     }
 
     public void playRounds() {
@@ -44,8 +48,9 @@ public class Game extends IntentService {
     }
 
     private void printResults(Round round) {
-        Map<Player, Integer> results = round.getResults();
-        for (Player player : players) {
+        Log.i(LOG_TAG, "Printing results!");
+        Map<HumanPlayer, Integer> results = round.getResults();
+        for (HumanPlayer player : players) {
             int score = results.get(player) == null ? 0 : results.get(player);
             Log.i(LOG_TAG, player + " scored " + score);
         }

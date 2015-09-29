@@ -7,10 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import mglewis.co.uk.demowhist.cards.Game;
+import mglewis.co.uk.demowhist.game.Game;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String LOG_TAG = "MainActivity";
+    private static final String LOG_TAG = "DWST:MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

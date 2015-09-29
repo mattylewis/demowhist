@@ -7,6 +7,8 @@ import java.util.List;
 
 import mglewis.co.uk.demowhist.cards.Card.Suit;
 import mglewis.co.uk.demowhist.cards.Card.Value;
+import mglewis.co.uk.demowhist.game.Trick;
+import mglewis.co.uk.demowhist.player.HumanPlayer;
 
 /**
  * Created by Matthew Lewis on 24/08/2015.
@@ -41,15 +43,15 @@ public class HandTest extends TestCase {
     private void testGetValidCardsWhereMakingSecondPlay() {
         Hand hand = createHand();
         Trick trick = new Trick(Suit.DIAMONDS);
-        trick.makePlay(new Play(new Player("Matt"), new Card(Suit.CLUBS, Value.NINE)));
+        trick.makePlay(new Play(new HumanPlayer("Matt"), new Card(Suit.CLUBS, Value.NINE)));
         assertEquals("Checking only 2 cards are valid when making second play", 2, hand.getValidCards(trick).size());
     }
 
     private void testGetValidCardsWhereNoLeadCard() {
         Hand hand = createHand();
         Trick trick = new Trick(Suit.SPADES);
-        trick.makePlay(new Play(new Player("Matt"), new Card(Suit.SPADES, Value.NINE)));
-        trick.makePlay(new Play(new Player("Katie"), new Card(Suit.SPADES, Value.TEN)));
+        trick.makePlay(new Play(new HumanPlayer("Matt"), new Card(Suit.SPADES, Value.NINE)));
+        trick.makePlay(new Play(new HumanPlayer("Katie"), new Card(Suit.SPADES, Value.TEN)));
         assertEquals("Checking only 2 cards are valid when making second play", 8, hand.getValidCards(trick).size());
     }
 }
