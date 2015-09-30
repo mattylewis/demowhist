@@ -58,6 +58,10 @@ public abstract class Player {
 
     public abstract Player copyForSimulation();
 
+    protected void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
     private static int calculateScore(int tricksWon, int targetScore) {
         if (tricksWon == targetScore) {
             return 10 + tricksWon;

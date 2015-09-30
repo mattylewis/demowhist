@@ -11,6 +11,7 @@ import java.util.Map;
 import mglewis.co.uk.demowhist.cards.Card;
 import mglewis.co.uk.demowhist.player.ComputerPlayer;
 import mglewis.co.uk.demowhist.player.HumanPlayer;
+import mglewis.co.uk.demowhist.player.Player;
 
 /**
  * Created by MK on 24/08/2015.
@@ -18,7 +19,7 @@ import mglewis.co.uk.demowhist.player.HumanPlayer;
 public class Game extends IntentService {
     private static final String LOG_TAG = "DWST:Game";
 
-    private List<HumanPlayer> players = new LinkedList<>();
+    private List<Player> players = new LinkedList<>();
     private int numberOfRoundsToPlay = 2;
 
     public Game() {
@@ -49,8 +50,8 @@ public class Game extends IntentService {
 
     private void printResults(Round round) {
         Log.i(LOG_TAG, "Printing results!");
-        Map<HumanPlayer, Integer> results = round.getResults();
-        for (HumanPlayer player : players) {
+        Map<Player, Integer> results = round.getResults();
+        for (Player player : players) {
             int score = results.get(player) == null ? 0 : results.get(player);
             Log.i(LOG_TAG, player + " scored " + score);
         }

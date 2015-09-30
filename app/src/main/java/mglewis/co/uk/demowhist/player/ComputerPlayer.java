@@ -13,6 +13,10 @@ import mglewis.co.uk.demowhist.game.Trick;
  */
 public class ComputerPlayer extends Player {
 
+    public ComputerPlayer(String playerName) {
+        setPlayerName(playerName);
+    }
+
     public Play playCard(Round round, Trick trick) {
         List<Card> validCards = getHand().getValidCards(trick);
         // TODO: improve AI here

@@ -10,6 +10,7 @@ import java.util.Map;
 import mglewis.co.uk.demowhist.game.PlayedTricks;
 import mglewis.co.uk.demowhist.game.Trick;
 import mglewis.co.uk.demowhist.player.HumanPlayer;
+import mglewis.co.uk.demowhist.player.Player;
 
 /**
  * Created by Matthew Lewis on 20/09/2015.
@@ -71,9 +72,9 @@ public class PlayedTricksTest extends TestCase {
 
     public void testGetResults() {
         PlayedTricks playedTricks = createPlayedTricks();
-        Map<HumanPlayer, Integer> results = playedTricks.getResults();
-        HumanPlayer winningPlayer = null;
-        for ( HumanPlayer player : results.keySet()) {
+        Map<Player, Integer> results = playedTricks.getResults();
+        Player winningPlayer = null;
+        for ( Player player : results.keySet()) {
             if ( winningPlayer == null || results.get(player) > results.get(winningPlayer)) {
                 winningPlayer = player;
             }

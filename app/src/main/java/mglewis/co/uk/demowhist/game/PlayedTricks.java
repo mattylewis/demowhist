@@ -7,7 +7,7 @@ import java.util.Map;
 
 import mglewis.co.uk.demowhist.cards.Card;
 import mglewis.co.uk.demowhist.cards.Play;
-import mglewis.co.uk.demowhist.player.HumanPlayer;
+import mglewis.co.uk.demowhist.player.Player;
 
 /**
  * Created by Matthew Lewis on 18/09/2015.
@@ -43,10 +43,10 @@ public class PlayedTricks {
         return new PlayedTricks(playedTricks);
     }
 
-    public Map<HumanPlayer, Integer> getResults() {
-        Map<HumanPlayer, Integer> results = new HashMap<>();
+    public Map<Player, Integer> getResults() {
+        Map<Player, Integer> results = new HashMap<>();
         for (Trick trick : playedTricks) {
-            HumanPlayer winner = trick.getWinningPlayer();
+            Player winner = trick.getWinningPlayer();
             if (results.get(winner) == null) {
                 results.put(winner, 1);
             } else {

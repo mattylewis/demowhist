@@ -17,12 +17,12 @@ import mglewis.co.uk.demowhist.game.Trick;
  */
 public class HumanPlayer extends Player {
     private static final String LOG_TAG = "DWST:HumanPlayer";
-    private String playerName;
+
     private Hand currentHand = new Hand();
     private int targetScore;
 
     public HumanPlayer(String playerName) {
-        this.playerName = playerName;
+        setPlayerName(playerName);
     }
 
     public Play playCard(Round round, Trick trick) {
@@ -43,7 +43,7 @@ public class HumanPlayer extends Player {
 
 
     public boolean playerNameMatches(HumanPlayer player) {
-        if (playerName.equals(player.toString())) {
+        if (getPlayerName().equals(player.getPlayerName())) {
             return true;
         }
         return false;

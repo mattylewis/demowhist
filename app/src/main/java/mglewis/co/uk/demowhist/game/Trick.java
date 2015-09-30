@@ -21,6 +21,7 @@ public class Trick {
     private Suit trump;
 
     public Trick(Suit trump) {
+        Log.i(LOG_TAG, "Creating a new trick. The trump suit is: " + trump);
         this.trump = trump;
     }
 
